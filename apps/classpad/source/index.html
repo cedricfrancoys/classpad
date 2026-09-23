@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ClassPad - Notes de cours</title>
+  <link rel="stylesheet" href="/moo/material.css" />
+  <link rel="stylesheet" href="main.css" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+</head>
+<body>
+<div class="app">
+  <aside class="navigation" aria-label="Navigation des cours">
+    <div class="navigation-heading">
+      <img class="app-mark" src="/favicon.png" alt="" aria-hidden="true" />
+      <div>
+        <strong>ClassPad</strong>
+        <span>Mes notes de cours</span>
+      </div>
+      <button
+        id="themeToggle"
+        class="theme-toggle"
+        type="button"
+        aria-label="Activer le mode sombre"
+        aria-pressed="false"
+        title="Activer le mode sombre"
+      >
+        <svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5 8.5 8.5 0 1 0 20.5 14.2Z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <section class="navigation-section course-section">
+      <div class="course-heading">
+        <label for="course" class="section-label">Cours</label>
+        <button
+          id="addCourseBtn"
+          class="icon-button"
+          type="button"
+          title="Ajouter un dossier de cours"
+          aria-label="Ajouter un dossier de cours"
+          disabled
+        ><span class="material-icons-outlined" aria-hidden="true">create_new_folder</span></button>
+      </div>
+      <div class="course-picker">
+        <button
+          id="course"
+          class="course-picker-trigger"
+          type="button"
+          aria-label="Dossier du cours"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          aria-controls="courseList"
+          disabled
+        >
+          <span id="courseSelectedName">Chargement…</span>
+          <span class="material-icons-outlined course-picker-chevron" aria-hidden="true">expand_more</span>
+        </button>
+        <div id="courseList" class="course-list" role="listbox" aria-label="Cours disponibles" hidden></div>
+      </div>
+    </section>
+
+    <section class="navigation-section files-section" aria-labelledby="courseFilesTitle">
+      <div class="files-heading">
+        <div>
+          <span id="courseFilesTitle" class="section-label">Fichiers</span>
+          <span id="courseFileCount" class="file-count"></span>
+        </div>
+        <div class="files-heading-actions">
+          <button id="newCourseFileBtn" class="icon-button" type="button" title="Créer un nouveau fichier" aria-label="Créer un nouveau fichier" disabled>
+            <span class="material-icons-outlined" aria-hidden="true">note_add</span>
+          </button>
+          <button id="refreshCourseFilesBtn" style="display: none" class="icon-button" type="button" title="Actualiser les fichiers" aria-label="Actualiser les fichiers" disabled>↻</button>
+        </div>
+      </div>
+      <div id="courseFiles" class="course-files" role="list" aria-live="polite">
+        <div class="files-message">Sélectionnez un cours.</div>
+      </div>
+    </section>
+  </aside>
+
+  <main class="workspace">
+    <div class="topbar">
+      <label for="title">Sujet</label>
+      <input id="title" class="small-input grow" placeholder="Ex. Fractions et puissances" />
+
+      <div class="time" id="clock"></div>
+
+      <div class="menu-container">
+        <button
+          id="printDocumentBtn"
+          class="menu-button"
+          type="button"
+          title="Imprimer ou exporter en PDF"
+          aria-label="Imprimer ou exporter en PDF"
+        ><span class="material-icons-outlined" aria-hidden="true">print</span></button>
+
+        <button
+          id="menuBtn"
+          class="menu-button"
+          type="button"
+          title="info"
+          aria-label="info"
+          aria-expanded="false"
+          aria-controls="mainMenu"
+        ><span class="material-icons-outlined" aria-hidden="true">settings</span></button>
+
+        <div id="mainMenu" class="main-menu" hidden>
+          <div class="quick-info">
+            <h2>Aide rapide</h2>
+
+            <h3>Markdown</h3>
+            <p>
+              <span class="kbd">**gras**</span>
+              <span class="kbd">*italique*</span>
+              <span class="kbd"># titre</span>
+              <span class="kbd">- liste</span>
+              <span class="kbd">`code`</span>
+            </p>
+
+            <h3>Fonctions mathématiques</h3>
+            <p>
+              Saisis par exemple <span class="kbd">(x+2)/3</span>,
+              <span class="kbd">x^2</span>, <span class="kbd">sqrt(x+1)</span> ou
+              <span class="kbd">f(x)=(x+2)/3</span>, puis appuie sur
+              <span class="kbd">Espace</span> ou <span class="kbd">Entrée</span>.
+            </p>
+            <p>
+              Double-clique une formule pour la modifier.
+              <span class="kbd">Ctrl+M</span> convertit la sélection en formule.
+            </p>
+          </div>
+
+          <div class="menu-actions">
+            <button id="markdownTransferBtn" type="button">Import / export</button>
+            <button id="storagePathBtn" type="button">Dossier des fichiers</button>
+            <button id="resetApplicationBtn" class="danger" type="button">Réinitialiser</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="editor-shell">
+      <div id="editor" contenteditable="true" spellcheck="true"></div>
+    </div>
+
+    <div class="statusbar">
+      <span id="status" class="status-ok">Prêt</span>
+      <span>Sauvegarde automatique sur le disque</span>
+    </div>
+  </main>
+
+  <aside class="document-outline" aria-labelledby="documentOutlineTitle">
+    <div class="navigation-heading">
+      <strong id="documentOutlineTitle">Plan du document</strong>
+    </div>
+    <nav class="outline-content" aria-label="Titres du document">
+      <p id="documentOutlineEmpty" class="outline-empty">Les titres Markdown apparaîtront ici.</p>
+      <ol id="documentOutlineList" class="outline-list"></ol>
+    </nav>
+  </aside>
+</div>
+
+<div id="courseActionMenu" class="file-action-menu" role="menu" aria-label="Actions sur le cours" hidden>
+  <button id="renameCourseBtn" type="button" role="menuitem">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 20 4.2-1 10.6-10.6a2.1 2.1 0 0 0-3-3L5.2 16Z"></path><path d="m14.8 6.4 2.8 2.8"></path></svg>
+    <span>Renommer</span>
+  </button>
+</div>
+
+<div id="fileActionMenu" class="file-action-menu" role="menu" aria-label="Actions sur le fichier" hidden>
+  <button type="button" role="menuitem" data-file-action="rename">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 20 4.2-1 10.6-10.6a2.1 2.1 0 0 0-3-3L5.2 16Z"></path><path d="m14.8 6.4 2.8 2.8"></path></svg>
+    <span>Renommer</span>
+  </button>
+  <div class="file-action-separator" role="separator"></div>
+  <button type="button" role="menuitem" data-file-action="delete" class="danger">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"></path></svg>
+    <span>Supprimer</span>
+  </button>
+  <div class="file-action-separator" role="separator"></div>
+  <button type="button" role="menuitem" data-file-action="move">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h7l2 2h9v10H3Z"></path><path d="M3 7V5h7l2 2"></path></svg>
+    <span>Déplacer vers un cours</span>
+    <svg class="file-action-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg>
+  </button>
+</div>
+
+<div class="modal-backdrop" id="courseFolderBackdrop">
+  <div class="modal modal-compact" role="dialog" aria-modal="true" aria-labelledby="courseFolderTitle">
+    <div class="modal-header">
+      <h2 id="courseFolderTitle">Ajouter un cours</h2>
+      <p id="courseFolderDescription">Un dossier portant ce nom sera créé dans le dossier des fichiers.</p>
+    </div>
+    <div class="modal-body">
+      <label for="courseFolderInput" class="textarea-label">Nom du dossier</label>
+      <input id="courseFolderInput" class="path-input" type="text" maxlength="120" autocomplete="off" />
+      <div id="courseFolderError" class="form-error" role="alert"></div>
+    </div>
+    <div class="modal-footer">
+      <button id="cancelCourseFolderBtn" type="button">Annuler</button>
+      <button id="saveCourseFolderBtn" type="button" class="primary">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="fileActionBackdrop">
+  <div class="modal modal-compact" role="dialog" aria-modal="true" aria-labelledby="fileActionTitle">
+    <div class="modal-header">
+      <h2 id="fileActionTitle">Modifier le fichier</h2>
+      <p id="fileActionDescription"></p>
+    </div>
+    <div class="modal-body">
+      <div id="fileRenameField">
+        <label id="fileRenameLabel" for="fileRenameInput" class="textarea-label">Nouveau nom</label>
+        <input id="fileRenameInput" class="path-input" type="text" maxlength="240" autocomplete="off" />
+      </div>
+      <div id="fileMoveField" hidden>
+        <label for="fileMoveCourse" class="textarea-label">Cours de destination</label>
+        <select id="fileMoveCourse" class="path-input"></select>
+      </div>
+      <div id="fileActionError" class="form-error" role="alert"></div>
+    </div>
+    <div class="modal-footer">
+      <button id="cancelFileActionBtn" type="button">Annuler</button>
+      <button id="confirmFileActionBtn" type="button" class="primary">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="markdownTransferBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="markdownTransferTitle">
+    <div class="modal-header">
+      <h2 id="markdownTransferTitle">Import / export Markdown</h2>
+      <p>Copie le texte pour l’exporter, ou remplace-le par du Markdown à importer.</p>
+    </div>
+    <div class="modal-body">
+      <label for="markdownTransferInput" class="textarea-label">Contenu Markdown</label>
+      <textarea id="markdownTransferInput" class="markdown-transfer-input" spellcheck="false"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button id="copyMarkdownBtn" type="button">Copier</button>
+      <button id="cancelMarkdownTransferBtn" type="button">Fermer</button>
+      <button id="importMarkdownBtn" type="button" class="primary">Importer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="storagePathBackdrop">
+  <div id="storagePathModal" class="modal modal-compact" role="dialog" aria-modal="true" aria-labelledby="storagePathTitle">
+    <div class="modal-header">
+      <h2 id="storagePathTitle">Dossier des fichiers</h2>
+      <p>Chemin utilisé sur le disque pour lire et stocker les fichiers ClassPad.</p>
+    </div>
+    <div class="modal-body">
+      <label for="storagePathInput" class="textarea-label">Chemin du dossier</label>
+      <div class="path-controls">
+        <input
+          id="storagePathInput"
+          class="path-input"
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Ex. C:\Users\nom\Documents\ClassPad"
+        />
+        <button
+          id="browseStoragePathBtn"
+          type="button"
+          aria-expanded="false"
+          aria-controls="storageBrowser"
+        >Parcourir…</button>
+      </div>
+      <div id="storageBrowser" class="storage-browser" hidden>
+        <div class="storage-browser-toolbar">
+          <button id="storageDrivesBtn" type="button">Ce PC</button>
+          <button id="storageParentBtn" type="button" disabled>Dossier parent</button>
+          <span id="storageBrowserPath" class="storage-browser-path">Ce PC</span>
+        </div>
+        <div id="storageBrowserStatus" class="storage-browser-status" aria-live="polite"></div>
+        <div id="storageBrowserList" class="storage-browser-list" role="list"></div>
+      </div>
+      <div id="storagePathError" class="form-error" role="alert"></div>
+    </div>
+    <div class="modal-footer">
+      <button id="cancelStoragePathBtn" type="button">Annuler</button>
+      <button id="saveStoragePathBtn" type="button" class="primary">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-header">
+      <h2 id="modalTitle">Modifier la formule</h2>
+      <p>Modifie la notation texte. L’aperçu est recalculé immédiatement.</p>
+    </div>
+    <div class="modal-body">
+      <input id="formulaInput" class="formula-input" autocomplete="off" spellcheck="false" />
+      <div class="tools">
+        <button data-wrap="paren">( … )</button>
+        <button data-wrap="square">( … )²</button>
+        <button data-wrap="sqrt">√( … )</button>
+        <button data-wrap="reciprocal">1 / ( … )</button>
+        <button data-wrap="cubeRoot">³√( … )</button>
+      </div>
+      <div id="formulaPreview" class="preview"></div>
+      <div id="formulaError" style="font-size:12px;color:#a33;min-height:18px"></div>
+    </div>
+    <div class="modal-footer">
+      <button id="toTextBtn">Repasser en texte</button>
+      <button id="cancelBtn">Annuler</button>
+      <button id="saveBtn" class="primary">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script src="math-parser.js"></script>
+<script src="math-detection.js"></script>
+<script src="main.js"></script>
+<script src="document-outline.js"></script>
+</body>
+</html>
